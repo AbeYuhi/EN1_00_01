@@ -7,6 +7,7 @@ public class GameManagerScript : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject boxPrefab;
     public GameObject goalPrefab;
+    public GameObject wallPrefab;
     public GameObject clearText;
     int[,] map;             //レベルデザイン用の配列
     GameObject[,] field;    //ゲーム管理用の配列
@@ -17,11 +18,13 @@ public class GameManagerScript : MonoBehaviour
         //GameObject instance = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
 
         map = new int[,] {
-            {0, 0, 0, 0, 0},
-            {0, 3, 1, 3, 0},
-            {0, 0, 2, 0, 0},
-            {0, 2, 3, 2, 0},
-            {0, 0, 0, 0, 0},
+            {4, 4, 4, 4, 4, 4, 4},
+            {4, 4, 0, 0, 0, 4, 4},
+            {4, 0, 3, 1, 3, 0, 4},
+            {4, 0, 0, 2, 0, 0, 4},
+            {4, 0, 2, 3, 2, 0, 4},
+            {4, 0, 0, 4, 0, 0, 4},
+            {4, 4, 4, 4, 4, 4, 4},
         };
         field = new GameObject
             [
@@ -51,6 +54,13 @@ public class GameManagerScript : MonoBehaviour
                 {
                     Instantiate(
                     goalPrefab,
+                    new Vector3(x - (map.GetLength(1) / 2.0f), map.GetLength(0) - y - (map.GetLength(0) / 2.0f), 0.01f),
+                    Quaternion.identity);
+                }
+                if (map[y, x] == 4)
+                {
+                    field[y, x] = Instantiate(
+                    wallPrefab,
                     new Vector3(x - (map.GetLength(1) / 2.0f), map.GetLength(0) - y - (map.GetLength(0) / 2.0f), 0.01f),
                     Quaternion.identity);
                 }
@@ -133,6 +143,11 @@ public class GameManagerScript : MonoBehaviour
             return false;
         }
         if (moveTo.x < 0 || moveTo.x >= map.GetLength(1))
+        {
+            return false;
+        }
+
+        if(field[moveTo.y, moveTo.x] != null && field[moveTo.y, moveTo.x].tag == "Wall")
         {
             return false;
         }
