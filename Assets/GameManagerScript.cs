@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class GameManagerScript : MonoBehaviour
 {
     public GameObject playerPrefab;
@@ -16,6 +17,8 @@ public class GameManagerScript : MonoBehaviour
     void Start()
     {
         //GameObject instance = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+
+        Screen.SetResolution(1920, 1080, false);
 
         map = new int[,] {
             {4, 4, 4, 4, 4, 4, 4},
