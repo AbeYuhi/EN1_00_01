@@ -9,9 +9,11 @@ public class GameManagerScript : MonoBehaviour
     public GameObject boxPrefab;
     public GameObject goalPrefab;
     public GameObject wallPrefab;
+    public GameObject particlePrefab;
     public GameObject clearText;
     int[,] map;             //レベルデザイン用の配列
     GameObject[,] field;    //ゲーム管理用の配列
+    List<GameObject[,]> beforeField = new List<GameObject[,]>();
 
     // Start is called before the first frame update
     void Start()
@@ -39,9 +41,9 @@ public class GameManagerScript : MonoBehaviour
         {
             for (int x = 0; x < map.GetLength(1); x++)
             {
-                if(map[y,x] == 1)
+                if (map[y, x] == 1)
                 {
-                    field[y,x] = Instantiate(
+                    field[y, x] = Instantiate(
                         playerPrefab,
                         new Vector3(x - (map.GetLength(1) / 2.0f), map.GetLength(0) - y - (map.GetLength(0) / 2.0f), 0),
                         Quaternion.identity);
@@ -69,44 +71,136 @@ public class GameManagerScript : MonoBehaviour
                 }
             }
         }
-
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
+            beforeField.Add(field); //一個前のField情報を記録
             Vector2Int playerIndex = GetPlayerIndex();
 
             Vector2Int moveTo = new Vector2Int(playerIndex.x - 1, playerIndex.y);
 
             MoveNumber("Player", playerIndex, moveTo);
+
+            for(int i = 0; i < 10; i++)
+            {
+                Instantiate(
+                   particlePrefab,
+                   new Vector3(playerIndex.x - (map.GetLength(1) / 2.0f), map.GetLength(0) - playerIndex.y - (map.GetLength(0) / 2.0f), 0.01f),
+                   Quaternion.identity);
+            }
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
+            beforeField.Add(field); //一個前のField情報を記録
             Vector2Int playerIndex = GetPlayerIndex();
 
             Vector2Int moveTo = new Vector2Int(playerIndex.x + 1, playerIndex.y);
 
             MoveNumber("Player", playerIndex, moveTo);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Instantiate(
+                   particlePrefab,
+                   new Vector3(playerIndex.x - (map.GetLength(1) / 2.0f), map.GetLength(0) - playerIndex.y - (map.GetLength(0) / 2.0f), 0.01f),
+                   Quaternion.identity);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
+            beforeField.Add(field); //一個前のField情報を記録
             Vector2Int playerIndex = GetPlayerIndex();
 
             Vector2Int moveTo = new Vector2Int(playerIndex.x, playerIndex.y - 1);
 
             MoveNumber("Player", playerIndex, moveTo);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Instantiate(
+                   particlePrefab,
+                   new Vector3(playerIndex.x - (map.GetLength(1) / 2.0f), map.GetLength(0) - playerIndex.y - (map.GetLength(0) / 2.0f), 0.01f),
+                   Quaternion.identity);
+            }
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
+            beforeField.Add(field); //一個前のField情報を記録
             Vector2Int playerIndex = GetPlayerIndex();
 
             Vector2Int moveTo = new Vector2Int(playerIndex.x, playerIndex.y + 1);
 
             MoveNumber("Player", playerIndex, moveTo);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Instantiate(
+                   particlePrefab,
+                   new Vector3(playerIndex.x - (map.GetLength(1) / 2.0f), map.GetLength(0) - playerIndex.y - (map.GetLength(0) / 2.0f), 0.01f),
+                   Quaternion.identity);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            beforeField.Add(field);
+            for (int y = 0; y < map.GetLength(0); y++)
+            {
+                for (int x = 0; x < map.GetLength(1); x++)
+                {
+                    Destroy(field[y, x]);
+                }
+            }
+            field = new GameObject
+             [
+              map.GetLength(0),
+              map.GetLength(1)
+             ];
+            for (int y = 0; y < map.GetLength(0); y++)
+            {
+                for (int x = 0; x < map.GetLength(1); x++)
+                {
+                    if (map[y, x] == 1)
+                    {
+                        field[y, x] = Instantiate(
+                            playerPrefab,
+                            new Vector3(x - (map.GetLength(1) / 2.0f), map.GetLength(0) - y - (map.GetLength(0) / 2.0f), 0),
+                            Quaternion.identity);
+                    }
+                    if (map[y, x] == 2)
+                    {
+                        field[y, x] = Instantiate(
+                            boxPrefab,
+                            new Vector3(x - (map.GetLength(1) / 2.0f), map.GetLength(0) - y - (map.GetLength(0) / 2.0f), 0),
+                            Quaternion.identity);
+                    }
+                    if (map[y, x] == 3)
+                    {
+                        Instantiate(
+                        goalPrefab,
+                        new Vector3(x - (map.GetLength(1) / 2.0f), map.GetLength(0) - y - (map.GetLength(0) / 2.0f), 0.01f),
+                        Quaternion.identity);
+                    }
+                    if (map[y, x] == 4)
+                    {
+                        field[y, x] = Instantiate(
+                        wallPrefab,
+                        new Vector3(x - (map.GetLength(1) / 2.0f), map.GetLength(0) - y - (map.GetLength(0) / 2.0f), 0.01f),
+                        Quaternion.identity);
+                    }
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+           
         }
 
         if (IsCleard())
@@ -206,5 +300,12 @@ public class GameManagerScript : MonoBehaviour
         }
         //条件未達成でなければ条件達成
         return true;
+    }
+
+    bool UnDo()
+    {
+        if (beforeField.Count <= 1)
+        {
+        }
     }
 }
