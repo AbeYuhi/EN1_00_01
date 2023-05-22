@@ -455,7 +455,7 @@ Camera:
   m_GameObject: {fileID: 321203718}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -472,7 +472,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -537,6 +537,7 @@ MonoBehaviour:
   boxPrefab: {fileID: 6433627373203693655, guid: 688a21800b899c84081acf098e2981f1, type: 3}
   goalPrefab: {fileID: 5922175575000209267, guid: dc4ab4ac1843c044c9abdf7ea6b256f6, type: 3}
   wallPrefab: {fileID: 1594996907719088019, guid: 1fd735d0945ce5548b20e390f5db08c9, type: 3}
+  particlePrefab: {fileID: 9001896613226880341, guid: 77b9b98294a641a4d854b0c245596ebd, type: 3}
   clearText: {fileID: 20582712}
 --- !u!4 &868544638
 Transform:

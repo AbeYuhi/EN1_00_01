@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -71,6 +71,8 @@ public class GameManagerScript : MonoBehaviour
                 }
             }
         }
+
+        beforeField.Add(field);
     }
 
     // Update is called once per frame
@@ -198,11 +200,6 @@ public class GameManagerScript : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-           
-        }
-
         if (IsCleard())
         {
             clearText.SetActive(true);
@@ -300,12 +297,5 @@ public class GameManagerScript : MonoBehaviour
         }
         //ğŒ–¢’B¬‚Å‚È‚¯‚ê‚ÎğŒ’B¬
         return true;
-    }
-
-    bool UnDo()
-    {
-        if (beforeField.Count <= 1)
-        {
-        }
     }
 }
